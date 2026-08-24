@@ -1,6 +1,9 @@
 const jwt = require('jsonwebtoken');
 
 const login = (req, res) => {
+  console.log('Login attempt received:', req.body);
+  console.log('Expected ADMIN:', process.env.ADMIN_ACCESS_CODE);
+  
   const { access_code } = req.body;
 
   if (!access_code) {
@@ -8,10 +11,11 @@ const login = (req, res) => {
   }
 
   let role = null;
+  const safe_access_code = String(access_code).trim();
 
-  if (access_code === process.env.ADMIN_ACCESS_CODE) {
+  if (safe_access_code === String(process.env.ADMIN_ACCESS_CODE).trim()) {
     role = 'admin';
-  } else if (access_code === process.env.USER_ACCESS_CODE) {
+  } else if (safe_access_code === String(process.env.USER_ACCESS_CODE).trim()) {
     role = 'user';
   }
 
