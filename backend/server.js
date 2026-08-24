@@ -96,16 +96,24 @@ const startServer = async () => {
 
     console.log('Database synced successfully.');
 
-    // Start Express server
-    app.listen(PORT, '0.0.0.0', () => {
-      console.log(`Server running on port ${PORT}`);
-      console.log(`Port: ${PORT}`);
-    });
+    // Only listen if not running on Vercel serverless environment
+    if (!process.env.VERCEL) {
+      app.listen(PORT, '0.0.0.0', () => {
+        console.log(`Server running on port ${PORT}`);
+        console.log(`Port: ${PORT}`);
+      });
+    }
 
   } catch (error) {
     console.error('Failed to start server:', error);
-    process.exit(1);
+    // Don't exit on Vercel, it crashes the lambda permanently
+    if (!process.env.VERCEL) {
+      process.exit(1);
+    }
   }
 };
 
 startServer();
+
+// Export the Express API for Vercel
+module.exports = app;
