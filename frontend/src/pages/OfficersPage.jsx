@@ -16,8 +16,8 @@ const OfficersPage = () => {
     try {
       const config = { headers: { Authorization: `Bearer ${token}` } };
       const [offRes, memRes] = await Promise.all([
-        axios.get(`http://${window.location.hostname}:5000/api/officers`, config),
-        axios.get(`http://${window.location.hostname}:5000/api/members`, config)
+        axios.get(`https://prasan-mandal-audumbar-b3v7rztyk-omkars-projects-7dec41be.vercel.app/api/officers`, config),
+        axios.get(`https://prasan-mandal-audumbar-b3v7rztyk-omkars-projects-7dec41be.vercel.app/api/members`, config)
       ]);
       setOfficers(offRes.data);
       setMembers(memRes.data);
@@ -33,7 +33,7 @@ const OfficersPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`http://${window.location.hostname}:5000/api/officers`, formData, {
+      await axios.post(`https://prasan-mandal-audumbar-b3v7rztyk-omkars-projects-7dec41be.vercel.app/api/officers`, formData, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setFormData({ memberId: '', position: '' });
@@ -48,7 +48,7 @@ const OfficersPage = () => {
     const passcode = window.prompt("Enter action passcode to delete:");
     if (!passcode) return;
     try {
-      await axios.delete(`http://${window.location.hostname}:5000/api/officers/${id}`, {
+      await axios.delete(`https://prasan-mandal-audumbar-b3v7rztyk-omkars-projects-7dec41be.vercel.app/api/officers/${id}`, {
         headers: { 
           Authorization: `Bearer ${token}`,
           'X-Passcode': passcode 

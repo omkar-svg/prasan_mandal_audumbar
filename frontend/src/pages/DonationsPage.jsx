@@ -24,8 +24,8 @@ const DonationsPage = () => {
     try {
       const config = { headers: { Authorization: `Bearer ${token}` } };
       const [donRes, memRes] = await Promise.all([
-        axios.get(`http://${window.location.hostname}:5000/api/donations`, config),
-        axios.get(`http://${window.location.hostname}:5000/api/members`, config)
+        axios.get(`https://prasan-mandal-audumbar-b3v7rztyk-omkars-projects-7dec41be.vercel.app/api/donations`, config),
+        axios.get(`https://prasan-mandal-audumbar-b3v7rztyk-omkars-projects-7dec41be.vercel.app/api/members`, config)
       ]);
       setDonations(donRes.data);
       setMembers(memRes.data);
@@ -41,7 +41,7 @@ const DonationsPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`http://${window.location.hostname}:5000/api/donations`, formData, {
+      await axios.post(`https://prasan-mandal-audumbar-b3v7rztyk-omkars-projects-7dec41be.vercel.app/api/donations`, formData, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setFormData({ memberId: '', amount: '' });
@@ -57,7 +57,7 @@ const DonationsPage = () => {
     const passcode = window.prompt("Enter action passcode to delete:");
     if (!passcode) return;
     try {
-      await axios.delete(`http://${window.location.hostname}:5000/api/donations/${id}`, {
+      await axios.delete(`https://prasan-mandal-audumbar-b3v7rztyk-omkars-projects-7dec41be.vercel.app/api/donations/${id}`, {
         headers: { 
           Authorization: `Bearer ${token}`,
           'X-Passcode': passcode 
@@ -78,7 +78,7 @@ const DonationsPage = () => {
     const passcode = window.prompt("Enter action passcode to save changes:");
     if (!passcode) return;
     try {
-      await axios.put(`http://${window.location.hostname}:5000/api/donations/${id}`, { amount: editAmount }, {
+      await axios.put(`https://prasan-mandal-audumbar-b3v7rztyk-omkars-projects-7dec41be.vercel.app/api/donations/${id}`, { amount: editAmount }, {
         headers: { 
           Authorization: `Bearer ${token}`,
           'X-Passcode': passcode 

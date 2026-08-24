@@ -15,8 +15,8 @@ const DashboardPage = () => {
       try {
         const config = { headers: { Authorization: `Bearer ${token}` } };
         const [statsRes, annRes] = await Promise.all([
-          axios.get(`http://${window.location.hostname}:5000/api/dashboard`, config),
-          axios.get(`http://${window.location.hostname}:5000/api/announcements`, config)
+          axios.get(`https://prasan-mandal-audumbar-b3v7rztyk-omkars-projects-7dec41be.vercel.app/api/dashboard`, config),
+          axios.get(`https://prasan-mandal-audumbar-b3v7rztyk-omkars-projects-7dec41be.vercel.app/api/announcements`, config)
         ]);
         setStats(statsRes.data);
         setAnnouncements(annRes.data.slice(0, 5));

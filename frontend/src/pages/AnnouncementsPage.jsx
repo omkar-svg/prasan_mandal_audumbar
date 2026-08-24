@@ -13,7 +13,7 @@ const AnnouncementsPage = () => {
 
   const fetchAnnouncements = async () => {
     try {
-      const res = await axios.get(`http://${window.location.hostname}:5000/api/announcements`, {
+      const res = await axios.get(`https://prasan-mandal-audumbar-b3v7rztyk-omkars-projects-7dec41be.vercel.app/api/announcements`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setAnnouncements(res.data);
@@ -29,7 +29,7 @@ const AnnouncementsPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`http://${window.location.hostname}:5000/api/announcements`, formData, {
+      await axios.post(`https://prasan-mandal-audumbar-b3v7rztyk-omkars-projects-7dec41be.vercel.app/api/announcements`, formData, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setFormData({ title: '', message: '' });
@@ -44,7 +44,7 @@ const AnnouncementsPage = () => {
     const passcode = window.prompt("Enter action passcode to delete:");
     if (!passcode) return;
     try {
-      await axios.delete(`http://${window.location.hostname}:5000/api/announcements/${id}`, {
+      await axios.delete(`https://prasan-mandal-audumbar-b3v7rztyk-omkars-projects-7dec41be.vercel.app/api/announcements/${id}`, {
         headers: { 
           Authorization: `Bearer ${token}`,
           'X-Passcode': passcode 
