@@ -18,7 +18,7 @@ const ExpensesPage = () => {
 
   const fetchExpenses = async () => {
     try {
-      const res = await axios.get(`https://prasan-mandal-audumbar-b3v7rztyk-omkars-projects-7dec41be.vercel.app/api/expenses`, {
+      const res = await axios.get(`https://prasan-mandal-audumbar.vercel.app/api/expenses`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setExpenses(res.data);
@@ -34,7 +34,7 @@ const ExpensesPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`https://prasan-mandal-audumbar-b3v7rztyk-omkars-projects-7dec41be.vercel.app/api/expenses`, formData, {
+      await axios.post(`https://prasan-mandal-audumbar.vercel.app/api/expenses`, formData, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setFormData({ description: '', amount: '' });
@@ -50,7 +50,7 @@ const ExpensesPage = () => {
     const passcode = window.prompt("Enter action passcode to delete:");
     if (!passcode) return;
     try {
-      await axios.delete(`https://prasan-mandal-audumbar-b3v7rztyk-omkars-projects-7dec41be.vercel.app/api/expenses/${id}`, {
+      await axios.delete(`https://prasan-mandal-audumbar.vercel.app/api/expenses/${id}`, {
         headers: { 
           Authorization: `Bearer ${token}`,
           'X-Passcode': passcode 
@@ -77,7 +77,7 @@ const ExpensesPage = () => {
     const passcode = window.prompt("Enter action passcode to save changes:");
     if (!passcode) return;
     try {
-      await axios.put(`https://prasan-mandal-audumbar-b3v7rztyk-omkars-projects-7dec41be.vercel.app/api/expenses/${id}`, editData, {
+      await axios.put(`https://prasan-mandal-audumbar.vercel.app/api/expenses/${id}`, editData, {
         headers: { 
           Authorization: `Bearer ${token}`,
           'X-Passcode': passcode 

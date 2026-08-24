@@ -15,7 +15,7 @@ const MembersPage = () => {
 
   const fetchMembers = async () => {
     try {
-      const res = await axios.get(`https://prasan-mandal-audumbar-b3v7rztyk-omkars-projects-7dec41be.vercel.app/api/members`, {
+      const res = await axios.get(`https://prasan-mandal-audumbar.vercel.app/api/members`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setMembers(res.data);
@@ -31,7 +31,7 @@ const MembersPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`https://prasan-mandal-audumbar-b3v7rztyk-omkars-projects-7dec41be.vercel.app/api/members`, formData, {
+      await axios.post(`https://prasan-mandal-audumbar.vercel.app/api/members`, formData, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setFormData({ name: '', mobile: '' });
@@ -47,7 +47,7 @@ const MembersPage = () => {
     const passcode = window.prompt("Enter action passcode to delete:");
     if (!passcode) return;
     try {
-      await axios.delete(`https://prasan-mandal-audumbar-b3v7rztyk-omkars-projects-7dec41be.vercel.app/api/members/${id}`, {
+      await axios.delete(`https://prasan-mandal-audumbar.vercel.app/api/members/${id}`, {
         headers: { 
           Authorization: `Bearer ${token}`,
           'X-Passcode': passcode 

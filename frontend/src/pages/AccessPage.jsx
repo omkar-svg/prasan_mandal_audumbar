@@ -15,7 +15,7 @@ const AccessPage = () => {
     setError('');
     
     try {
-      const response = await axios.post(`https://prasan-mandal-audumbar-b3v7rztyk-omkars-projects-7dec41be.vercel.app/api/auth/login`, { access_code: accessCode });
+      const response = await axios.post(`https://prasan-mandal-audumbar.vercel.app/api/auth/login`, { access_code: accessCode });
       login(response.data.token);
     } catch (err) {
       setError(err.response?.data?.message || t('invalidCode'));
