@@ -1,14 +1,13 @@
 import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
-import { ShieldAlert, Save, UserPlus, RefreshCw } from 'lucide-react';
+import { ShieldAlert, UserPlus, Trash2, Users } from 'lucide-react';
 
 const API_URL = 'https://prasan-mandal-audumbar.vercel.app/api';
 
 const SecretAdminPage = () => {
   const { token, role } = useContext(AuthContext);
   const [members, setMembers] = useState([]);
-  const [passcode, setPasscode] = useState('');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ text: '', type: '' });
   
@@ -35,7 +34,7 @@ const SecretAdminPage = () => {
 
   const showMessage = (text, type) => {
     setMessage({ text, type });
-    setTimeout(() => setMessage({ text: '', type: '' }), 3000);
+    setTimeout(() => setMessage({ text: '', type: '' }), 4000);
   };
 
   const handleAddMember = async (e) => {
@@ -61,20 +60,13 @@ const SecretAdminPage = () => {
   };
 
   const handleRoleChange = async (id, currentName, currentMobile, newRoleVal) => {
-    if (!passcode) {
-      showMessage('Action Passcode is required to change roles', 'error');
-      return;
-    }
     try {
       await axios.put(`${API_URL}/members/${id}`, {
         name: currentName,
         mobile: currentMobile,
         role: newRoleVal
       }, {
-        headers: { 
-          Authorization: `Bearer ${token}`,
-          'x-passcode': passcode
-        }
+        headers: { Authorization: `Bearer ${token}` }
       });
       showMessage('Role updated successfully', 'success');
       fetchMembers();
@@ -83,119 +75,159 @@ const SecretAdminPage = () => {
     }
   };
 
+  const handleDeleteMember = async (member) => {
+    const enteredMobile = window.prompt(`To confirm deletion of ${member.name}, please enter their mobile number (${member.mobile}):`);
+    
+    if (enteredMobile === null) return; // User cancelled
+    
+    if (enteredMobile !== member.mobile) {
+      showMessage("Mobile number did not match. Deletion cancelled.", "error");
+      return;
+    }
+
+    try {
+      await axios.delete(`${API_URL}/members/${member.id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      showMessage('Member deleted successfully', 'success');
+      fetchMembers();
+    } catch (error) {
+      showMessage(error.response?.data?.message || 'Error deleting member', 'error');
+    }
+  };
+
   if (role !== 'admin') {
     return (
-      <div className="page-container">
-        <div style={{ textAlign: 'center', padding: '3rem', background: 'white', borderRadius: '15px' }}>
-          <ShieldAlert size={64} color="var(--primary-color)" style={{ margin: '0 auto 1rem' }} />
-          <h2>Access Denied</h2>
-          <p>You must be an admin to view this page.</p>
+      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '5rem' }}>
+        <div className="card" style={{ textAlign: 'center', padding: '3rem', maxWidth: '400px' }}>
+          <ShieldAlert size={48} color="var(--primary-color)" style={{ margin: '0 auto 1rem' }} />
+          <h3 style={{ marginBottom: '1rem' }}>Access Denied</h3>
+          <p style={{ color: 'var(--text-muted)' }}>You must be an admin to view this page.</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="page-container">
-      <div className="flex-between" style={{ marginBottom: '2rem' }}>
-        <h2>System Admin Panel</h2>
-        <div>
-          <input 
-            type="password"
-            placeholder="Action Passcode"
-            value={passcode}
-            onChange={(e) => setPasscode(e.target.value)}
-            className="premium-input"
-            style={{ width: '200px', marginBottom: 0 }}
-          />
-        </div>
+    <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', marginBottom: '1.5rem' }}>
+        <ShieldAlert size={28} color="var(--primary-color)" />
+        <h2 style={{ fontSize: '1.5rem', margin: 0 }}>System Admin Panel</h2>
       </div>
 
       {message.text && (
         <div style={{ 
-          padding: '1rem', 
+          padding: '0.8rem 1rem', 
           marginBottom: '1.5rem', 
-          borderRadius: '10px',
+          borderRadius: '8px',
+          fontSize: '0.9rem',
           background: message.type === 'success' ? '#dcfce7' : '#fee2e2',
-          color: message.type === 'success' ? '#166534' : '#991b1b'
+          color: message.type === 'success' ? '#166534' : '#991b1b',
+          border: `1px solid ${message.type === 'success' ? '#bbf7d0' : '#fecaca'}`
         }}>
           {message.text}
         </div>
       )}
 
-      <div className="glass-card" style={{ marginBottom: '2rem' }}>
-        <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.5rem' }}>
-          <UserPlus size={20} /> Add New Member
+      {/* Add Member Section */}
+      <div className="card" style={{ marginBottom: '2rem' }}>
+        <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.1rem', marginBottom: '1rem', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem' }}>
+          <UserPlus size={18} /> Add New Member
         </h3>
-        <form onSubmit={handleAddMember} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr auto', gap: '1rem', alignItems: 'center' }}>
-          <input 
-            type="text" 
-            placeholder="Name" 
-            value={newName} 
-            onChange={(e) => setNewName(e.target.value)} 
-            className="premium-input" 
-            required 
-            style={{ marginBottom: 0 }}
-          />
-          <input 
-            type="tel" 
-            placeholder="Mobile Number" 
-            value={newMobile} 
-            onChange={(e) => setNewMobile(e.target.value)} 
-            className="premium-input" 
-            required 
-            style={{ marginBottom: 0 }}
-          />
-          <select 
-            value={newRole} 
-            onChange={(e) => setNewRole(e.target.value)} 
-            className="premium-input"
-            style={{ marginBottom: 0 }}
-          >
-            <option value="normal">Normal</option>
-            <option value="admin">Admin</option>
-          </select>
-          <button type="submit" className="premium-btn" disabled={loading}>
-            Add Member
+        <form onSubmit={handleAddMember} style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', alignItems: 'flex-end' }}>
+          <div style={{ flex: '1 1 200px' }}>
+            <label style={{ display: 'block', fontSize: '0.85rem', marginBottom: '0.3rem', color: 'var(--text-muted)' }}>Name</label>
+            <input 
+              type="text" 
+              className="form-control" 
+              value={newName} 
+              onChange={(e) => setNewName(e.target.value)} 
+              required 
+            />
+          </div>
+          <div style={{ flex: '1 1 200px' }}>
+            <label style={{ display: 'block', fontSize: '0.85rem', marginBottom: '0.3rem', color: 'var(--text-muted)' }}>Mobile Number</label>
+            <input 
+              type="tel" 
+              className="form-control" 
+              value={newMobile} 
+              onChange={(e) => setNewMobile(e.target.value)} 
+              required 
+            />
+          </div>
+          <div style={{ flex: '0 1 150px' }}>
+            <label style={{ display: 'block', fontSize: '0.85rem', marginBottom: '0.3rem', color: 'var(--text-muted)' }}>Role</label>
+            <select 
+              className="form-control"
+              value={newRole} 
+              onChange={(e) => setNewRole(e.target.value)} 
+            >
+              <option value="normal">Normal</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
+          <button type="submit" className="btn btn-primary" disabled={loading} style={{ flex: '0 1 auto' }}>
+            {loading ? 'Adding...' : 'Add Member'}
           </button>
         </form>
       </div>
 
-      <div className="glass-card">
-        <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.5rem' }}>
-          <RefreshCw size={20} /> Manage Roles
+      {/* Manage Members Section */}
+      <div className="card">
+        <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.1rem', marginBottom: '1rem', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem' }}>
+          <Users size={18} /> Manage Existing Members
         </h3>
+        
         <div style={{ overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
             <thead>
-              <tr style={{ borderBottom: '2px solid #eee' }}>
-                <th style={{ padding: '1rem', color: '#666' }}>Name</th>
-                <th style={{ padding: '1rem', color: '#666' }}>Mobile</th>
-                <th style={{ padding: '1rem', color: '#666' }}>Role</th>
+              <tr style={{ borderBottom: '2px solid var(--border)', textAlign: 'left' }}>
+                <th style={{ padding: '0.8rem', color: 'var(--text-muted)' }}>Name</th>
+                <th style={{ padding: '0.8rem', color: 'var(--text-muted)' }}>Mobile</th>
+                <th style={{ padding: '0.8rem', color: 'var(--text-muted)' }}>Role</th>
+                <th style={{ padding: '0.8rem', color: 'var(--text-muted)', textAlign: 'right' }}>Actions</th>
               </tr>
             </thead>
             <tbody>
-              {members.map(member => (
-                <tr key={member.id} style={{ borderBottom: '1px solid #eee' }}>
-                  <td style={{ padding: '1rem', fontWeight: '500' }}>{member.name}</td>
-                  <td style={{ padding: '1rem', color: '#666' }}>{member.mobile}</td>
-                  <td style={{ padding: '1rem' }}>
-                    <select 
-                      value={member.role || 'normal'} 
-                      onChange={(e) => handleRoleChange(member.id, member.name, member.mobile, e.target.value)}
-                      style={{ 
-                        padding: '0.5rem', 
-                        borderRadius: '8px',
-                        border: '1px solid #ccc',
-                        background: member.role === 'admin' ? '#fef3c7' : '#f3f4f6'
-                      }}
-                    >
-                      <option value="normal">Normal</option>
-                      <option value="admin">Admin</option>
-                    </select>
+              {members.length === 0 ? (
+                <tr>
+                  <td colSpan="4" style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)' }}>
+                    No members found.
                   </td>
                 </tr>
-              ))}
+              ) : (
+                members.map(member => (
+                  <tr key={member.id} style={{ borderBottom: '1px solid var(--border)', transition: 'background 0.2s' }}>
+                    <td style={{ padding: '0.8rem', fontWeight: '500', color: 'var(--text-main)' }}>{member.name}</td>
+                    <td style={{ padding: '0.8rem', color: 'var(--text-muted)' }}>{member.mobile}</td>
+                    <td style={{ padding: '0.8rem' }}>
+                      <select 
+                        value={member.role || 'normal'} 
+                        onChange={(e) => handleRoleChange(member.id, member.name, member.mobile, e.target.value)}
+                        className="form-control"
+                        style={{ 
+                          padding: '0.4rem', 
+                          minWidth: '100px',
+                          background: member.role === 'admin' ? 'rgba(249, 115, 22, 0.1)' : 'white',
+                          borderColor: member.role === 'admin' ? 'var(--primary-color)' : 'var(--border)'
+                        }}
+                      >
+                        <option value="normal">Normal</option>
+                        <option value="admin">Admin</option>
+                      </select>
+                    </td>
+                    <td style={{ padding: '0.8rem', textAlign: 'right' }}>
+                      <button 
+                        onClick={() => handleDeleteMember(member)}
+                        className="btn btn-danger" 
+                        style={{ padding: '0.4rem 0.6rem', display: 'inline-flex', alignItems: 'center', gap: '0.3rem', fontSize: '0.85rem' }}
+                      >
+                        <Trash2 size={14} /> Delete
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>

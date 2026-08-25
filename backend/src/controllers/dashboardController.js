@@ -16,16 +16,14 @@ const getDashboardStats = async (req, res) => {
       notDonatedMembersCount,
     };
 
-    // If admin, we can also send total donation sum and expenses
-    if (req.user && req.user.role === 'admin') {
-      const totalDonationSum = await Donation.sum('amount') || 0;
-      const totalExpenses = await Expense.sum('amount') || 0;
-      const remainingBalance = totalDonationSum - totalExpenses;
-      
-      dashboardData.totalDonationSum = totalDonationSum;
-      dashboardData.totalExpenses = totalExpenses;
-      dashboardData.remainingBalance = remainingBalance;
-    }
+    // Send total donation sum and expenses to all members
+    const totalDonationSum = await Donation.sum('amount') || 0;
+    const totalExpenses = await Expense.sum('amount') || 0;
+    const remainingBalance = totalDonationSum - totalExpenses;
+    
+    dashboardData.totalDonationSum = totalDonationSum;
+    dashboardData.totalExpenses = totalExpenses;
+    dashboardData.remainingBalance = remainingBalance;
 
     res.json(dashboardData);
   } catch (error) {

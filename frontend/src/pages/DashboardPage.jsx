@@ -59,7 +59,7 @@ const DashboardPage = () => {
         </div>
       </div>
 
-      {role === 'admin' && stats.totalExpenses !== undefined && (
+      {stats.totalExpenses !== undefined && (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem', marginBottom: '3rem' }}>
           <div className="card" style={{ background: 'linear-gradient(135deg, rgba(249, 115, 22, 0.1), rgba(249, 115, 22, 0.05))', borderColor: 'var(--primary-color)' }}>
             <div style={{ color: 'var(--primary-color)', fontSize: '1.1rem', fontWeight: '600' }}>{t('totalDonationCollected')}</div>
