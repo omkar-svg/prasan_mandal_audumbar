@@ -12,6 +12,7 @@ const getMembers = async (req, res) => {
         id: m.id,
         name: m.name,
         mobile: m.mobile,
+        role: m.role,
         donationAmount,
         donated: donationAmount > 0,
         createdAt: m.createdAt
@@ -25,8 +26,8 @@ const getMembers = async (req, res) => {
 
 const createMember = async (req, res) => {
   try {
-    const { name, mobile } = req.body;
-    const newMember = await Member.create({ name, mobile });
+    const { name, mobile, role } = req.body;
+    const newMember = await Member.create({ name, mobile, role: role || 'normal' });
     res.status(201).json(newMember);
   } catch (error) {
     res.status(500).json({ message: 'Error creating member', error: error.message });
@@ -36,8 +37,8 @@ const createMember = async (req, res) => {
 const updateMember = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, mobile } = req.body;
-    await Member.update({ name, mobile }, { where: { id } });
+    const { name, mobile, role } = req.body;
+    await Member.update({ name, mobile, role }, { where: { id } });
     const updatedMember = await Member.findByPk(id);
     res.json(updatedMember);
   } catch (error) {

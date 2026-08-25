@@ -5,7 +5,7 @@ import { LanguageContext } from '../context/LanguageContext';
 import { Heart } from 'lucide-react';
 
 const AccessPage = () => {
-  const [accessCode, setAccessCode] = useState('');
+  const [mobile, setMobile] = useState('');
   const [error, setError] = useState('');
   const { login } = useContext(AuthContext);
   const { t } = useContext(LanguageContext);
@@ -15,7 +15,7 @@ const AccessPage = () => {
     setError('');
     
     try {
-      const response = await axios.post(`https://prasan-mandal-audumbar.vercel.app/api/auth/login`, { access_code: accessCode });
+      const response = await axios.post(`https://prasan-mandal-audumbar.vercel.app/api/auth/login`, { mobile });
       login(response.data.token);
     } catch (err) {
       setError(err.response?.data?.message || t('invalidCode'));
@@ -43,10 +43,10 @@ const AccessPage = () => {
         
         <form onSubmit={handleSubmit}>
           <input 
-            type="password" 
-            placeholder="••••••••" 
-            value={accessCode}
-            onChange={(e) => setAccessCode(e.target.value)}
+            type="tel" 
+            placeholder={t('enterCodePlaceholder')} 
+            value={mobile}
+            onChange={(e) => setMobile(e.target.value)}
             className="premium-input"
             required
             autoFocus

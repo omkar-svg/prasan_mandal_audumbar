@@ -1,10 +1,10 @@
 export const translations = {
   en: {
     appTitle: "Prasanna Ganesh Utsav Mandal Audumbar",
-    enterAccessCode: "Enter Access Code",
-    enterCodePlaceholder: "Enter Code...",
+    enterAccessCode: "Enter Mobile Number",
+    enterCodePlaceholder: "Enter mobile number...",
     continueBtn: "Continue",
-    invalidCode: "Invalid Access Code",
+    invalidCode: "Invalid Mobile Number",
     
     // Nav
     dashboard: "Dashboard",
@@ -77,10 +77,10 @@ export const translations = {
   },
   mr: {
     appTitle: "प्रसन्न गणेश उत्सव मंडळ औदुंबर",
-    enterAccessCode: "अॅक्सेस कोड टाका",
-    enterCodePlaceholder: "कोड टाका...",
+    enterAccessCode: "मोबाईल क्रमांक टाका",
+    enterCodePlaceholder: "मोबाईल क्रमांक टाका...",
     continueBtn: "पुढे जा",
-    invalidCode: "चुकीचा अॅक्सेस कोड",
+    invalidCode: "चुकीचा मोबाईल क्रमांक",
     
     // Nav
     dashboard: "डॅशबोर्ड",

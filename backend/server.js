@@ -92,7 +92,7 @@ const startServer = async () => {
 
     // Sync Sequelize models
     // For deployment, avoid alter: true
-    await sequelize.sync();
+    await sequelize.sync({ alter: true });
 
     console.log('Database synced successfully.');
 

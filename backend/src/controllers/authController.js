@@ -1,31 +1,27 @@
 const jwt = require('jsonwebtoken');
+const { Member } = require('../models');
 
-const login = (req, res) => {
+const login = async (req, res) => {
   console.log('Login attempt received:', req.body);
-  console.log('Expected ADMIN:', process.env.ADMIN_ACCESS_CODE);
   
-  const { access_code } = req.body;
+  const { mobile } = req.body;
 
-  if (!access_code) {
-    return res.status(400).json({ message: 'Access code is required' });
+  if (!mobile) {
+    return res.status(400).json({ message: 'Mobile number is required' });
   }
 
-  let role = null;
-  const safe_access_code = String(access_code).trim();
+  try {
+    const member = await Member.findOne({ where: { mobile } });
+    if (!member) {
+      return res.status(401).json({ message: 'Invalid mobile number' });
+    }
 
-  if (safe_access_code === String(process.env.ADMIN_ACCESS_CODE).trim()) {
-    role = 'admin';
-  } else if (safe_access_code === String(process.env.USER_ACCESS_CODE).trim()) {
-    role = 'user';
+    const token = jwt.sign({ id: member.id, role: member.role }, process.env.JWT_SECRET, { expiresIn: '7d' });
+    res.json({ token, role: member.role });
+  } catch (error) {
+    console.error('Login error:', error);
+    res.status(500).json({ message: 'Internal server error' });
   }
-
-  if (!role) {
-    return res.status(401).json({ message: 'Invalid access code' });
-  }
-
-  const token = jwt.sign({ role }, process.env.JWT_SECRET, { expiresIn: '7d' });
-
-  res.json({ token, role });
 };
 
 module.exports = { login };

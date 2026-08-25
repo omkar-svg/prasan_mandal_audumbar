@@ -10,6 +10,11 @@ const Member = sequelize.define('Member', {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  role: {
+    type: DataTypes.STRING,
+    defaultValue: 'normal',
+    allowNull: false,
+  },
 }, {
   timestamps: true,
 });

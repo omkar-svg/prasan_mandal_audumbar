@@ -10,6 +10,7 @@ import OfficersPage from './pages/OfficersPage';
 import DonationsPage from './pages/DonationsPage';
 import ExpensesPage from './pages/ExpensesPage';
 import AnnouncementsPage from './pages/AnnouncementsPage';
+import SecretAdminPage from './pages/SecretAdminPage';
 
 const ProtectedRoute = ({ children }) => {
   const { token } = useContext(AuthContext);
@@ -29,6 +30,7 @@ function AppRoutes() {
       <Route path="/donations" element={<ProtectedRoute><DonationsPage /></ProtectedRoute>} />
       <Route path="/expenses" element={<ProtectedRoute><ExpensesPage /></ProtectedRoute>} />
       <Route path="/announcements" element={<ProtectedRoute><AnnouncementsPage /></ProtectedRoute>} />
+      <Route path="/secret-admin" element={<ProtectedRoute><SecretAdminPage /></ProtectedRoute>} />
       <Route path="*" element={<Navigate to={token ? "/dashboard" : "/access"} />} />
     </Routes>
   );
